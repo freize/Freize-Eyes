@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Freize Eyes — обои из нескольких фото</title>
-    <!-- Cropper.js -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Freize Eyes — синхронизация высоты кадрирования</title>
     <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
     <style>
@@ -14,86 +13,179 @@
         }
         body {
             background: #0a0a0a;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 16px 12px 40px;
             color: #f0f0f0;
         }
         .container {
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto;
         }
         .header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(135deg, #e0e0e0, #ffffff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin: 0;
-            letter-spacing: -0.5px;
         }
-        .header p {
-            color: #aaa;
-            font-size: 0.85rem;
-            margin-top: 6px;
+        .lang-selector {
+            background: #1e1e1e;
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border: 1px solid #3a3a3a;
+            cursor: pointer;
         }
         .toolbar {
             background: #121212;
-            border-radius: 32px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+            border-radius: 28px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2a2a;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .settings-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
-            justify-content: space-between;
+            gap: 12px;
+            justify-content: center;
             align-items: flex-end;
-            backdrop-filter: blur(4px);
-            border: 1px solid #2a2a2a;
+        }
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
         }
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             flex: 1;
-            min-width: 130px;
+            min-width: 120px;
         }
         .control-group label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             color: #9ca3af;
+            letter-spacing: 0.5px;
         }
         select, button {
             background: #1e1e1e;
             border: 1px solid #333;
-            padding: 10px 14px;
-            border-radius: 60px;
+            padding: 8px 10px;
+            border-radius: 50px;
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        select:active, button:active {
-            transform: scale(0.97);
         }
         button.primary {
             background: #2563eb;
             border: none;
-            box-shadow: 0 2px 12px rgba(37,99,235,0.3);
         }
-        button.primary:hover {
+        .sync-btn {
+            background: #6d28d9;
+            border: none;
+        }
+        .file-input {
+            width: 100%;
+            background: #1e1e1e;
+            border: 1px solid #3b82f6;
+            border-radius: 60px;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-input:hover {
+            background: #2a2a2a;
+            border-color: #60a5fa;
+        }
+        .file-input::file-selector-button {
             background: #3b82f6;
+            border: none;
+            border-radius: 40px;
+            padding: 6px 14px;
+            color: white;
+            font-weight: 500;
+            margin-right: 12px;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        button.outline {
-            background: transparent;
-            border-color: #3a3a3a;
+        .tips-block {
+            background: #111e2a;
+            border-radius: 24px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            border-left: 4px solid #3b82f6;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b9d0f0;
+            font-size: 0.75rem;
+        }
+        .recommendation-bar {
+            background: #1e293b;
+            border-radius: 40px;
+            padding: 10px 16px;
+            margin: 16px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .fill-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+        .progress-bg {
+            flex: 1;
+            height: 8px;
+            background: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #3b82f6;
+            border-radius: 10px;
+            transition: width 0.2s;
+        }
+        .fill-percent {
+            font-size: 0.8rem;
+            font-weight: 700;
+            min-width: 55px;
+            text-align: right;
+        }
+        .fill-warning {
+            color: #facc15;
+            font-size: 0.7rem;
         }
         .photos-grid {
             display: flex;
@@ -106,41 +198,38 @@
             border-radius: 28px;
             padding: 14px;
             border: 1px solid #262626;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.5);
-            transition: all 0.2s;
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
-            padding: 0 6px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .card-header h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             margin: 0;
             background: #1f1f1f;
             padding: 4px 12px;
             border-radius: 40px;
         }
-        .reset-img-btn {
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        .small-btn {
             background: #2c2c2c;
             border: none;
-            padding: 5px 12px;
+            padding: 6px 12px;
             font-size: 0.7rem;
             border-radius: 40px;
-            color: #f87171;
+            font-weight: 500;
         }
-        .file-input {
-            width: 100%;
-            background: #1e1e1e;
-            border: 1px dashed #3a3a3a;
-            border-radius: 60px;
-            padding: 10px;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-            color: #ccc;
+        .delete-btn {
+            background: #4a1a1a;
+            color: #ffaaaa;
         }
         .preview-area {
             background: #080808;
@@ -151,525 +240,816 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            background-image: radial-gradient(circle at 30% 40%, #2a2a2a 1px, transparent 1px);
-            background-size: 14px 14px;
         }
         .preview-img {
             max-width: 100%;
             display: block;
-            visibility: visible;
         }
-        .crop-info {
-            font-size: 0.7rem;
+        .add-card-btn {
+            background: #1f2a3a;
+            border: 1px dashed #3b82f6;
+            border-radius: 28px;
+            padding: 14px;
             text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3b82f6;
+            cursor: pointer;
+            transition: 0.2s;
             margin-top: 8px;
-            color: #6b7280;
         }
         .result-area {
             background: #000000;
-            border-radius: 36px;
-            padding: 20px;
+            border-radius: 32px;
+            padding: 18px;
             margin-top: 10px;
             text-align: center;
             border: 1px solid #2c2c2c;
         }
         .result-canvas {
             max-width: 100%;
-            border-radius: 28px;
+            border-radius: 24px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.8);
             background: black;
         }
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
         .download-btn {
             background: #10b981;
-            margin-top: 20px;
-            padding: 12px 28px;
+            padding: 10px 20px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.9rem;
             border: none;
+            border-radius: 60px;
+            flex: 1;
+            min-width: 130px;
+        }
+        .download-btn.jpeg {
+            background: #f59e0b;
         }
         .error-message {
             background: #2d0b0b;
             color: #ff9e9e;
             border-radius: 60px;
-            padding: 10px 16px;
-            font-size: 0.8rem;
-            margin-top: 16px;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            margin-top: 14px;
+        }
+        .info-note {
+            background: #0b2d1a;
+            color: #a7f3d0;
+            border-radius: 60px;
+            padding: 8px 14px;
+            font-size: 0.7rem;
+            margin-top: 12px;
         }
         .footer {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-align: center;
             color: #4a4a4a;
             margin-top: 28px;
         }
-        button:active {
-            transform: scale(0.97);
+        .floating-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            border-radius: 50px;
+            padding: 10px 14px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid #475569;
         }
         @media (max-width: 550px) {
-            body {
-                padding: 12px 10px;
-            }
-            .toolbar {
+            .settings-row {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .control-group {
-                width: 100%;
+            .buttons-row {
+                flex-direction: column;
             }
-            .photo-card {
-                padding: 12px;
+            .tips-block {
+                gap: 6px;
             }
+            .download-buttons {
+                flex-direction: column;
+            }
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>⚡ FREIZE EYES</h1>
-        <p>2-6 фото → вертикальные обои<br>с кадрированием, фильтрами и чёрными разделителями</p>
+        <h1>👁️ FREIZE EYES</h1>
+        <select id="langSelect" class="lang-selector">
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="zh">🇨🇳 中文</option>
+        </select>
+        <p id="subtitle">Добавляй фото → кадрируй глаза → вертикальные обои под твой телефон</p>
     </div>
 
     <div class="toolbar">
-        <div class="control-group">
-            <label>📸 Количество фото</label>
-            <select id="photoCountSelect">
-                <option value="2">2 фото</option>
-                <option value="3">3 фото</option>
-                <option value="4" selected>4 фото</option>
-                <option value="5">5 фото</option>
-                <option value="6">6 фото</option>
-            </select>
+        <div class="settings-row">
+            <div class="control-group">
+                <label id="labelFormat">📱 Разрешение экрана</label>
+                <select id="formatSelect"></select>
+            </div>
+            <div class="control-group">
+                <label id="labelFilter">🎨 Цветовой фильтр</label>
+                <select id="filterSelect">
+                    <option value="none">Оригинал</option>
+                    <option value="bw">Ч/Б</option>
+                    <option value="sepia">Сепия</option>
+                    <option value="vintage">Винтаж</option>
+                    <option value="cool">Холодный</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label id="labelGap">⚫ Разделитель (px)</label>
+                <select id="gapSelect">
+                    <option value="6">Тонкая 6px</option>
+                    <option value="10" selected>Средняя 10px</option>
+                    <option value="16">Широкая 16px</option>
+                </select>
+            </div>
         </div>
-        <div class="control-group">
-            <label>📱 Формат обоев</label>
-            <select id="formatSelect">
-                <option value="1080,1920">Full HD (1080x1920)</option>
-                <option value="1170,2532">iPhone 13/14/15</option>
-                <option value="1242,2688">iPhone Pro Max</option>
-                <option value="1440,2560">Samsung/Pixel 1440p</option>
-                <option value="1080,2400">20:9 Android</option>
-                <option value="750,1334">iPhone SE/8</option>
-            </select>
+        <div class="buttons-row">
+            <button id="syncHeightBtn" class="sync-btn">📐 Синхр. высоту</button>
+            <button id="generateBtn" class="primary">✨ СОБРАТЬ ОБОИ ✨</button>
         </div>
-        <div class="control-group">
-            <label>🎨 Фильтр</label>
-            <select id="filterSelect">
-                <option value="none">Оригинал</option>
-                <option value="bw">Ч/Б</option>
-                <option value="sepia">Сепия</option>
-                <option value="vintage">Винтаж</option>
-                <option value="cool">Холодный</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label>⚫ Полоска (px)</label>
-            <select id="gapSelect">
-                <option value="6">Тонкая 6px</option>
-                <option value="10" selected>Средняя 10px</option>
-                <option value="16">Широкая 16px</option>
-            </select>
-        </div>
-        <button id="generateBtn" class="primary">✨ Собрать обои ✨</button>
+    </div>
+
+    <div class="tips-block" id="tipsBlock">
+        <div class="tip-item"><span>📸</span> <span id="tip1">Выбери фото</span></div>
+        <div class="tip-item"><span>👁️</span> <span id="tip2">Нажми на фото → выдели область глаза (двигай/зум)</span></div>
+        <div class="tip-item"><span>➕</span> <span id="tip3">Добавляй фото кнопкой ниже (до 6)</span></div>
+        <div class="tip-item"><span>📐</span> <span id="tip4">Кнопка «Синхр. высоту» выравнивает высоту кадрирования</span></div>
+    </div>
+
+    <div class="recommendation-bar" id="recBar" style="display: none;">
+        <span class="fill-label" id="fillLabel">📏 Заполнение экрана:</span>
+        <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="fill-percent" id="fillPercent">0%</span>
+        <span class="fill-warning" id="fillWarning"></span>
     </div>
 
     <div id="photosContainer" class="photos-grid"></div>
 
+    <div style="margin: 16px 0 20px; text-align: center;">
+        <button id="generateBtnBottom" class="primary" style="width: 100%;">✨ СОБРАТЬ ОБОИ ✨</button>
+    </div>
+
     <div id="resultArea" class="result-area" style="display: none;">
-        <h3 style="margin: 0 0 12px 0;">🎯 Ваши обои</h3>
+        <h3 id="resultTitle" style="margin:0 0 10px 0;">🖼️ Ваши обои</h3>
         <canvas id="resultCanvas" class="result-canvas"></canvas>
-        <button id="downloadBtn" class="download-btn">⬇ Скачать PNG ⬇</button>
+        <div class="download-buttons">
+            <button id="downloadPngBtn" class="download-btn">📥 PNG</button>
+            <button id="DownloadJpegBtn" class="download-btn jpeg">📥 JPEG</button>
+        </div>
         <div id="errorMessage"></div>
+        <div id="infoNote" class="info-note">✔️ Автоматическая подгонка: если фото выше формата — обрезается снизу, если ниже — чёрное поле.</div>
     </div>
-    <div class="footer">
-        🔥 Совет: загрузите фото → откадрируйте нужную область (жест/мышь) → выберите формат и фильтр.<br>
-        📏 Если сумма фото выше формата — фото аккуратно обрежутся снизу. Если ниже — чёрное поле внизу.
-    </div>
+    <div class="footer" id="footerText">🔁 Кнопка «Синхр. высоту» делает одинаковую высоту кадрирования для всех фото.</div>
 </div>
 
-<script>
-    // ---------- Глобальные переменные ----------
-    let currentCroppers = [];     // массив экземпляров Cropper
-    let currentImgElements = [];  // img элементы для каждого слота
-    let currentPlaceholders = [];  // для хранения div-плейсхолдеров если нужно
-    let activePhotoCount = 4;
+<div class="floating-top" id="scrollToTopBtn" title="Наверх">⬆️</div>
 
-    // DOM элементы
+<script>
+    // ---------- База разрешений (с группировкой) ----------
+    const resolutionGroups = {
+        "Apple": {
+            "1290x2796": ["iPhone 15 Pro Max", "iPhone 15 Plus", "iPhone 14 Pro Max"],
+            "1179x2556": ["iPhone 15 Pro", "iPhone 14 Pro"],
+            "1170x2532": ["iPhone 14", "iPhone 13", "iPhone 13 Pro", "iPhone 12"],
+            "1284x2778": ["iPhone 13 Pro Max", "iPhone 12 Pro Max"],
+            "1242x2688": ["iPhone 11 Pro Max", "iPhone XS Max"],
+            "828x1792": ["iPhone 11", "iPhone XR"],
+            "1080x2340": ["iPhone 13 mini", "iPhone 12 mini"],
+            "750x1334": ["iPhone SE (2022)", "iPhone 8", "iPhone 7", "iPhone 6s"]
+        },
+        "Samsung": {
+            "1440x3120": ["Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S23 Ultra"],
+            "1080x2340": ["Galaxy S24", "Galaxy S23", "Galaxy S23 FE", "Galaxy A54"],
+            "1440x3088": ["Galaxy S22 Ultra", "Galaxy S22+"],
+            "1080x2640": ["Galaxy Z Flip5", "Galaxy Z Flip4"]
+        },
+        "Google Pixel": {
+            "1344x2992": ["Pixel 9 Pro XL", "Pixel 8 Pro"],
+            "1280x2856": ["Pixel 9 Pro"],
+            "1080x2424": ["Pixel 9", "Pixel 10", "Pixel 8", "Pixel 7", "Pixel 6"],
+            "1440x3120": ["Pixel 7 Pro", "Pixel 6 Pro"]
+        },
+        "Xiaomi": {
+            "1440x3200": ["Xiaomi 14 Ultra", "Xiaomi 13 Pro", "Xiaomi 12 Pro"],
+            "1200x2670": ["Xiaomi 14"],
+            "1080x2400": ["Xiaomi 13", "Xiaomi 12", "Redmi Note 13 Pro+"],
+            "1220x2712": ["Redmi Note 13 Pro"]
+        },
+        "Huawei": {
+            "1220x2700": ["Huawei P60 Pro", "Huawei P40 Pro"],
+            "1260x2720": ["Huawei Mate 60 Pro"],
+            "1080x2400": ["Huawei P30 Pro", "Nova 11"]
+        },
+        "OnePlus": {
+            "1440x3168": ["OnePlus 12"],
+            "1440x3216": ["OnePlus 11"],
+            "1240x2772": ["OnePlus Nord 3"]
+        },
+        "Стандартные": {
+            "1080x1920": ["Full HD (16:9)"],
+            "720x1600": ["HD+ (20:9)"],
+            "1440x2560": ["WQHD (16:9)"]
+        }
+    };
+
+    function isDesktop() {
+        return !('ontouchstart' in window) && window.innerWidth > 800;
+    }
+
+    function buildResolutionOptions() {
+        const fragment = document.createDocumentFragment();
+        for (const [brand, resolutions] of Object.entries(resolutionGroups)) {
+            const group = document.createElement('optgroup');
+            group.label = brand;
+            for (const [resStr, models] of Object.entries(resolutions)) {
+                const [w, h] = resStr.split('x').map(Number);
+                const option = document.createElement('option');
+                option.value = `${w},${h}`;
+                option.textContent = `${models.join(', ')} — ${w}×${h}`;
+                group.appendChild(option);
+            }
+            fragment.appendChild(group);
+        }
+        return fragment;
+    }
+
+    function detectDeviceResolution() {
+        if (isDesktop()) return { w: 1080, h: 1920 };
+        const ua = navigator.userAgent.toLowerCase();
+        if (ua.includes('pixel 9 pro xl')) return { w: 1344, h: 2992 };
+        if (ua.includes('pixel 9 pro')) return { w: 1280, h: 2856 };
+        if (ua.includes('pixel 9')) return { w: 1080, h: 2424 };
+        if (ua.includes('pixel 10')) return { w: 1080, h: 2424 };
+        if (ua.includes('iphone 15 pro max')) return { w: 1290, h: 2796 };
+        if (ua.includes('iphone 15 pro')) return { w: 1179, h: 2556 };
+        if (ua.includes('samsung s24 ultra')) return { w: 1440, h: 3120 };
+        const screenW = screen.width * (window.devicePixelRatio || 1);
+        let best = { w: 1080, h: 1920 };
+        let minDiff = Infinity;
+        for (const brand in resolutionGroups) {
+            for (const resStr in resolutionGroups[brand]) {
+                const [w, h] = resStr.split('x').map(Number);
+                const diff = Math.abs(w - screenW);
+                if (diff < minDiff) { minDiff = diff; best = { w, h }; }
+            }
+        }
+        return best;
+    }
+
+    // ---------- Языки ----------
+    const translations = {
+        ru: {
+            subtitle: "Добавляй фото → кадрируй глаза → вертикальные обои под твой телефон",
+            labelFormat: "📱 Разрешение экрана", labelFilter: "🎨 Цветовой фильтр", labelGap: "⚫ Разделитель (px)",
+            generateBtn: "✨ СОБРАТЬ ОБОИ ✨", resultTitle: "🖼️ Ваши обои",
+            infoNote: "✔️ Автоматическая подгонка: если фото выше формата — обрезается снизу, если ниже — чёрное поле.",
+            footer: "🔁 Кнопка «Синхр. высоту» делает одинаковую высоту кадрирования для всех фото.",
+            addPhoto: "+ Добавить ещё фото (до 6)", reset: "Сбросить", delete: "🗑️ Удалить",
+            choosePhoto: "🖼️ Выберите фото", photoLabel: "📷 Фото", errorNoPhotos: "⚠️ Нет загруженных фото.",
+            errorCropFailed: "❌ Ошибка получения кадрированного изображения", downloadPng: "📥 PNG", downloadJpeg: "📥 JPEG",
+            generateBtnDisabledTitle: "Загрузите хотя бы одно фото",
+            tips: ["Выбери фото", "Нажми на фото → выдели область глаза (двигай/зум)", "Добавляй фото кнопкой ниже (до 6)", "Кнопка «Синхр. высоту» выравнивает высоту кадрирования"],
+            fillLabel: "📏 Заполнение экрана:", fillIdeal: "Идеально (85-95%)", fillLow: "Низкое (<70%)", fillHigh: "Высокое (>98%)",
+            syncSuccess: "Высота кадрирования синхронизирована по среднему значению"
+        },
+        en: {
+            subtitle: "Add photos → crop eyes → vertical wallpaper for your phone",
+            labelFormat: "📱 Screen resolution", labelFilter: "🎨 Color filter", labelGap: "⚫ Separator (px)",
+            generateBtn: "✨ GENERATE ✨", resultTitle: "🖼️ Your wallpaper",
+            infoNote: "✔️ Auto height adjustment: if taller - crop from bottom, if shorter - black padding.",
+            footer: "🔁 'Sync height' button makes all crops equal height.",
+            addPhoto: "+ Add another photo (up to 6)", reset: "Reset", delete: "🗑️ Delete",
+            choosePhoto: "🖼️ Choose photo", photoLabel: "📷 Photo", errorNoPhotos: "⚠️ No photos uploaded.",
+            errorCropFailed: "❌ Failed to get cropped image", downloadPng: "📥 PNG", downloadJpeg: "📥 JPEG",
+            generateBtnDisabledTitle: "Upload at least one photo",
+            tips: ["Pick a photo", "Tap photo → crop eye area (pinch/zoom)", "Add up to 6 photos via button below", "'Sync height' button equalizes crop height"],
+            fillLabel: "📏 Screen fill:", fillIdeal: "Ideal (85-95%)", fillLow: "Low (<70%)", fillHigh: "High (>98%)",
+            syncSuccess: "Crop height synchronized to average value"
+        },
+        zh: {
+            subtitle: "添加照片 → 裁剪眼睛区域 → 为你的手机制作竖屏壁纸",
+            labelFormat: "📱 屏幕分辨率", labelFilter: "🎨 颜色滤镜", labelGap: "⚫ 分隔线 (像素)",
+            generateBtn: "✨ 生成壁纸 ✨", resultTitle: "🖼️ 你的壁纸",
+            infoNote: "✔️ 自动调整高度：如果超过格式则从底部裁剪，不足则添加黑色填充。",
+            footer: "🔁 「同步高度」按钮使所有裁剪高度相同。",
+            addPhoto: "+ 添加照片（最多6张）", reset: "重置", delete: "🗑️ 删除",
+            choosePhoto: "🖼️ 选择照片", photoLabel: "📷 照片", errorNoPhotos: "⚠️ 未上传照片。",
+            errorCropFailed: "❌ 获取裁剪图像失败", downloadPng: "📥 PNG", downloadJpeg: "📥 JPEG",
+            generateBtnDisabledTitle: "请至少上传一张照片",
+            tips: ["选择照片", "点击照片 → 裁剪眼睛区域", "通过下方按钮最多添加6张", "「同步高度」按钮使裁剪高度相同"],
+            fillLabel: "📏 屏幕填充:", fillIdeal: "理想 (85-95%)", fillLow: "过低 (<70%)", fillHigh: "过高 (>98%)",
+            syncSuccess: "裁剪高度已按平均值同步"
+        }
+    };
+
+    let currentLang = 'ru';
+    let cropperInstances = [];
+    let imgElements = [];
+    let placeholderDivs = [];
+    let slotsData = [];
+    let maxSlots = 6;
+    let lastFillPercent = 0;
+
     const photosContainer = document.getElementById('photosContainer');
-    const photoCountSelect = document.getElementById('photoCountSelect');
     const formatSelect = document.getElementById('formatSelect');
     const filterSelect = document.getElementById('filterSelect');
     const gapSelect = document.getElementById('gapSelect');
     const generateBtn = document.getElementById('generateBtn');
+    const generateBtnBottom = document.getElementById('generateBtnBottom');
+    const syncHeightBtn = document.getElementById('syncHeightBtn');
     const resultArea = document.getElementById('resultArea');
     const resultCanvas = document.getElementById('resultCanvas');
-    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadPngBtn = document.getElementById('downloadPngBtn');
+    const downloadJpegBtn = document.getElementById('DownloadJpegBtn');
     const errorMsgDiv = document.getElementById('errorMessage');
+    const langSelect = document.getElementById('langSelect');
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    const recBar = document.getElementById('recBar');
+    const progressFill = document.getElementById('progressFill');
+    const fillPercentSpan = document.getElementById('fillPercent');
+    const fillWarningSpan = document.getElementById('fillWarning');
 
-    // ---------- вспомогательные функции ----------
-    function destroyAllCroppers() {
-        for (let i = 0; i < currentCroppers.length; i++) {
-            if (currentCroppers[i]) {
-                try {
-                    currentCroppers[i].destroy();
-                } catch(e) {}
-                currentCroppers[i] = null;
+    function populateResolutionSelect() {
+        formatSelect.innerHTML = '';
+        formatSelect.appendChild(buildResolutionOptions());
+        const detected = detectDeviceResolution();
+        for (let i = 0; i < formatSelect.options.length; i++) {
+            if (formatSelect.options[i].value === `${detected.w},${detected.h}`) {
+                formatSelect.selectedIndex = i;
+                break;
             }
         }
-        currentCroppers = [];
-        currentImgElements = [];
-        currentPlaceholders = [];
     }
 
-    // Перестроить карточки в соответствии с выбранным количеством фото
-    function rebuildPhotoCards(count) {
-        destroyAllCroppers();
-        photosContainer.innerHTML = '';
-        currentCroppers = new Array(count).fill(null);
-        currentImgElements = new Array(count).fill(null);
-        currentPlaceholders = new Array(count).fill(null);
-
-        for (let i = 0; i < count; i++) {
-            const card = document.createElement('div');
-            card.className = 'photo-card';
-            card.dataset.index = i;
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3>📷 Фото ${i+1}</h3>
-                    <button class="reset-img-btn" data-reset="${i}">Сброс</button>
-                </div>
-                <input type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-idx="${i}">
-                <div class="preview-area" id="previewArea${i}">
-                    <div class="crop-placeholder" style="color:#5a5a5a; padding:20px;">🖼️ Выберите изображение</div>
-                </div>
-                <div class="crop-info">👉 Нажми на фото → кадрируй движением/зумом</div>
-            `;
-            photosContainer.appendChild(card);
-
-            const previewDiv = card.querySelector(`.preview-area`);
-            const placeholderDiv = previewDiv.querySelector('.crop-placeholder');
-            currentPlaceholders[i] = placeholderDiv;
-
-            // Создаем img элемент, который будем использовать для Cropper
-            const img = document.createElement('img');
-            img.style.maxWidth = '100%';
-            img.style.display = 'none';  // скрыт пока нет фото
-            img.alt = `preview ${i+1}`;
-            previewDiv.appendChild(img);
-            currentImgElements[i] = img;
-
-            // Обработчик загрузки файла
-            const fileInput = card.querySelector(`.file-input`);
-            fileInput.addEventListener('change', (e) => {
-                const idx = parseInt(e.target.getAttribute('data-idx'));
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    const url = ev.target.result;
-                    // Уничтожаем старый cropper если есть
-                    if (currentCroppers[idx]) {
-                        currentCroppers[idx].destroy();
-                        currentCroppers[idx] = null;
-                    }
-                    const imgElement = currentImgElements[idx];
-                    imgElement.src = url;
-                    imgElement.style.display = 'block';
-                    // скрываем плейсхолдер
-                    if (currentPlaceholders[idx]) {
-                        currentPlaceholders[idx].style.display = 'none';
-                    }
-                    imgElement.onload = () => {
-                        // Инициализируем Cropper с поддержкой тач-событий
-                        currentCroppers[idx] = new Cropper(imgElement, {
-                            viewMode: 2,
-                            dragMode: 'move',
-                            aspectRatio: NaN,
-                            autoCropArea: 1,
-                            responsive: true,
-                            restore: false,
-                            guides: true,
-                            center: true,
-                            highlight: true,
-                            background: false,
-                            rotatable: false,
-                            scalable: true,
-                            zoomable: true,
-                            movable: true,
-                            toggleDragModeOnDblclick: false,
-                            zoomOnTouch: true,
-                            zoomOnWheel: true
-                        });
-                    };
-                };
-                reader.readAsDataURL(file);
-            });
-
-            // Кнопка сброса фото
-            const resetBtn = card.querySelector(`.reset-img-btn`);
-            resetBtn.addEventListener('click', (e) => {
-                const idx = parseInt(resetBtn.getAttribute('data-reset'));
-                if (currentCroppers[idx]) {
-                    currentCroppers[idx].destroy();
-                    currentCroppers[idx] = null;
-                }
-                const imgEl = currentImgElements[idx];
-                imgEl.src = '';
-                imgEl.style.display = 'none';
-                if (currentPlaceholders[idx]) {
-                    currentPlaceholders[idx].style.display = 'flex';
-                }
-                // сбросить выбранный файл в input
-                const inp = document.querySelector(`.file-input[data-idx="${idx}"]`);
-                if (inp) inp.value = '';
-            });
-            resetBtn.setAttribute('data-reset', i);
+    // Обновление рекомендательной панели
+    async function updateFillRecommendation() {
+        if (!cropperInstances.some(c => c !== null)) {
+            recBar.style.display = 'none';
+            return;
+        }
+        const [targetW, targetH] = formatSelect.value.split(',').map(Number);
+        const gap = parseInt(gapSelect.value);
+        const loaded = [];
+        for (let i=0;i<cropperInstances.length;i++) if (cropperInstances[i]) loaded.push(i);
+        if (loaded.length === 0) { recBar.style.display = 'none'; return; }
+        let totalH = 0;
+        for (let idx of loaded) {
+            const cropped = getCroppedCanvasSafe(idx);
+            if (!cropped) continue;
+            const scale = targetW / cropped.width;
+            totalH += Math.floor(cropped.height * scale);
+        }
+        totalH += (loaded.length - 1) * gap;
+        let percent = (totalH / targetH) * 100;
+        percent = Math.min(100, Math.max(0, percent));
+        lastFillPercent = percent;
+        recBar.style.display = 'flex';
+        progressFill.style.width = `${percent}%`;
+        fillPercentSpan.innerText = `${Math.round(percent)}%`;
+        const t = translations[currentLang];
+        if (percent < 70) {
+            progressFill.style.background = '#f59e0b';
+            fillWarningSpan.innerText = t.fillLow;
+        } else if (percent > 98) {
+            progressFill.style.background = '#ef4444';
+            fillWarningSpan.innerText = t.fillHigh;
+        } else {
+            progressFill.style.background = '#10b981';
+            fillWarningSpan.innerText = t.fillIdeal;
         }
     }
 
-    // Функция получения кадрированного canvas из cropper (с учётом, что cropper может быть не инициализирован)
-    function getCroppedCanvasSafe(index) {
-        const cropper = currentCroppers[index];
-        if (!cropper) return null;
-        try {
-            return cropper.getCroppedCanvas();
-        } catch(e) {
-            console.warn(`cropper error index ${index}`, e);
-            return null;
-        }
+    function getCroppedCanvasSafe(idx) {
+        const cr = cropperInstances[idx];
+        if (!cr) return null;
+        try { return cr.getCroppedCanvas(); } catch(e) { return null; }
     }
 
-    // Применить цветовой фильтр к canvas (на месте)
-    function applyFilterToCanvas(canvas, filterType) {
+    // Принудительная синхронизация высоты по среднему значению
+    function syncCropHeights() {
+        const loadedIndices = [];
+        for (let i=0;i<cropperInstances.length;i++) if (cropperInstances[i]) loadedIndices.push(i);
+        if (loadedIndices.length < 2) {
+            alert(translations[currentLang].syncSuccess ? "Нужно хотя бы 2 фото для синхронизации" : "Need at least 2 photos");
+            return;
+        }
+        let total = 0;
+        for (let idx of loadedIndices) {
+            const data = cropperInstances[idx].getData();
+            total += data.height;
+        }
+        const avgHeight = Math.round(total / loadedIndices.length);
+        for (let idx of loadedIndices) {
+            const cropper = cropperInstances[idx];
+            const currentData = cropper.getData();
+            const imageData = cropper.getImageData();
+            const maxHeight = imageData.naturalHeight - currentData.y;
+            const minHeight = 30;
+            let newHeight = Math.min(maxHeight, Math.max(minHeight, avgHeight));
+            if (newHeight !== currentData.height) {
+                cropper.setData({ ...currentData, height: newHeight });
+            }
+        }
+        alert(translations[currentLang].syncSuccess);
+        updateFillRecommendation();
+    }
+
+    // Применение фильтра
+    function applyFilter(canvas, filter) {
         const ctx = canvas.getContext('2d');
         const w = canvas.width, h = canvas.height;
         const imgData = ctx.getImageData(0, 0, w, h);
         const data = imgData.data;
-        switch(filterType) {
+        switch(filter) {
             case 'bw':
-                for (let i = 0; i < data.length; i += 4) {
-                    const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-                    data[i] = data[i+1] = data[i+2] = gray;
-                }
-                break;
+                for (let i=0;i<data.length;i+=4) {
+                    const g = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+                    data[i]=data[i+1]=data[i+2]=g;
+                } break;
             case 'sepia':
-                for (let i = 0; i < data.length; i += 4) {
-                    let r = data[i], g = data[i+1], b = data[i+2];
-                    data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
-                    data[i+1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
-                    data[i+2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
-                }
-                break;
+                for (let i=0;i<data.length;i+=4) {
+                    let r=data[i], g=data[i+1], b=data[i+2];
+                    data[i]=Math.min(255, r*0.393+g*0.769+b*0.189);
+                    data[i+1]=Math.min(255, r*0.349+g*0.686+b*0.168);
+                    data[i+2]=Math.min(255, r*0.272+g*0.534+b*0.131);
+                } break;
             case 'vintage':
-                for (let i = 0; i < data.length; i += 4) {
-                    let r = data[i], g = data[i+1], b = data[i+2];
-                    data[i] = Math.min(255, r * 1.05);
-                    data[i+1] = Math.min(255, g * 0.92);
-                    data[i+2] = Math.min(255, b * 0.82);
-                    // легкий теплый налет
-                    let nr = data[i] * 0.9 + data[i+1] * 0.5;
-                    let ng = data[i] * 0.5 + data[i+1] * 0.8;
-                    data[i] = Math.min(255, nr);
-                    data[i+1] = Math.min(255, ng);
-                }
-                break;
+                for (let i=0;i<data.length;i+=4) {
+                    let r=data[i], g=data[i+1], b=data[i+2];
+                    data[i]=Math.min(255, r*1.05);
+                    data[i+1]=Math.min(255, g*0.92);
+                    data[i+2]=Math.min(255, b*0.82);
+                    let nr = data[i]*0.9 + data[i+1]*0.5;
+                    let ng = data[i]*0.5 + data[i+1]*0.8;
+                    data[i]=Math.min(255,nr); data[i+1]=Math.min(255,ng);
+                } break;
             case 'cool':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = Math.min(255, data[i] * 0.85);
-                    data[i+1] = Math.min(255, data[i+1] * 0.92);
-                    data[i+2] = Math.min(255, data[i+2] * 1.12);
-                }
-                break;
-            default: break;
+                for (let i=0;i<data.length;i+=4) {
+                    data[i]=Math.min(255, data[i]*0.85);
+                    data[i+1]=Math.min(255, data[i+1]*0.92);
+                    data[i+2]=Math.min(255, data[i+2]*1.12);
+                } break;
         }
         ctx.putImageData(imgData, 0, 0);
         return canvas;
     }
 
-    // Основная генерация
     async function generateWallpaper() {
-        // очистка ошибок
         errorMsgDiv.innerHTML = '';
-        const count = activePhotoCount;
-        // проверяем, что все фото загружены и cropper присутствует
-        for (let i = 0; i < count; i++) {
-            if (!currentCroppers[i]) {
-                errorMsgDiv.innerHTML = `<div class="error-message">❌ Фото ${i+1} не загружено или не откадрировано. Пожалуйста, загрузите все изображения и дождитесь кадрирования.</div>`;
-                resultArea.style.display = 'block';
-                return;
-            }
-        }
-
-        // получить настройки
-        const formatStr = formatSelect.value;
-        const [targetWidth, targetHeight] = formatStr.split(',').map(Number);
-        const gapSize = parseInt(gapSelect.value);
-        const filter = filterSelect.value;
-
-        // 1) Получаем кадрированные canvas каждого фото (оригинальные размеры после обрезки)
-        const croppedCanvases = [];
-        for (let i = 0; i < count; i++) {
-            const cropped = getCroppedCanvasSafe(i);
-            if (!cropped) {
-                errorMsgDiv.innerHTML = `<div class="error-message">⚠️ Ошибка получения кадрированного изображения для фото ${i+1}. Попробуйте перезагрузить фото.</div>`;
-                resultArea.style.display = 'block';
-                return;
-            }
-            croppedCanvases.push(cropped);
-        }
-
-        // 2) Масштабируем каждое фото под целевую ширину (без сжатия по вертикали пока, просто resize)
-        const scaledItems = []; // { canvas: HTMLCanvasElement, originalHeight: number, scaledHeight: number }
-        for (let i = 0; i < croppedCanvases.length; i++) {
-            const src = croppedCanvases[i];
-            const srcW = src.width;
-            const srcH = src.height;
-            if (srcW === 0 || srcH === 0) throw new Error('invalid size');
-            const scaleX = targetWidth / srcW;
-            const newHeight = Math.floor(srcH * scaleX);
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = targetWidth;
-            tempCanvas.height = newHeight;
-            const ctx = tempCanvas.getContext('2d');
-            ctx.drawImage(src, 0, 0, srcW, srcH, 0, 0, targetWidth, newHeight);
-            scaledItems.push({
-                canvas: tempCanvas,
-                originalScaledHeight: newHeight,
-                finalHeight: newHeight
-            });
-        }
-
-        // Суммарная высота фото и разделителей
-        const totalGaps = (count - 1) * gapSize;
-        let totalPhotoHeight = scaledItems.reduce((sum, item) => sum + item.originalScaledHeight, 0);
-        let totalHeightWithGaps = totalPhotoHeight + totalGaps;
-
-        // АДАПТАЦИЯ: если суммарная высота больше целевой -> применяем авто-кадрирование снизу равномерно по каждому фото
-        if (totalHeightWithGaps > targetHeight) {
-            const overflow = totalHeightWithGaps - targetHeight; // сколько лишних пикселей по высоте
-            // равномерно убираем высоту из каждого фото, обрезая снизу
-            let remainingOverflow = overflow;
-            // делаем копию finalHeight и будем изменять
-            for (let i = 0; i < scaledItems.length; i++) {
-                let item = scaledItems[i];
-                let maxReduce = item.originalScaledHeight - 4; // минимум оставить 4px
-                let reduce = Math.min(maxReduce, Math.ceil(remainingOverflow / (scaledItems.length - i)));
-                if (reduce < 0) reduce = 0;
-                item.finalHeight = item.originalScaledHeight - reduce;
-                remainingOverflow -= reduce;
-                if (remainingOverflow <= 0) break;
-            }
-            // если остался перебор (из-за округлений) – обрежем последнее чуть больше
-            let newTotal = scaledItems.reduce((s, it) => s + it.finalHeight, 0) + totalGaps;
-            if (newTotal > targetHeight) {
-                let lastIndex = scaledItems.length - 1;
-                let diff = newTotal - targetHeight;
-                scaledItems[lastIndex].finalHeight = Math.max(2, scaledItems[lastIndex].finalHeight - diff);
-            }
-            // пересчитаем общую высоту после обрезки
-            totalPhotoHeight = scaledItems.reduce((s, it) => s + it.finalHeight, 0);
-            totalHeightWithGaps = totalPhotoHeight + totalGaps;
-        }
-
-        // Создаем финальный canvas
-        const finalCanvas = document.createElement('canvas');
-        finalCanvas.width = targetWidth;
-        finalCanvas.height = targetHeight;
-        const ctxFinal = finalCanvas.getContext('2d');
-        // Заливаем черным фоном
-        ctxFinal.fillStyle = '#000000';
-        ctxFinal.fillRect(0, 0, targetWidth, targetHeight);
-
-        let currentY = 0;
-        for (let i = 0; i < scaledItems.length; i++) {
-            const item = scaledItems[i];
-            const desiredHeight = item.finalHeight;
-            let imgToDraw = item.canvas;
-            // Если нужная высота отличается от исходной (после автообрезания) — обрезаем canvas снизу
-            if (desiredHeight !== item.originalScaledHeight) {
-                const cropCanvas = document.createElement('canvas');
-                cropCanvas.width = targetWidth;
-                cropCanvas.height = desiredHeight;
-                const cropCtx = cropCanvas.getContext('2d');
-                // рисуем верхнюю часть исходного canvas, обрезая снизу
-                cropCtx.drawImage(item.canvas, 0, 0, targetWidth, desiredHeight, 0, 0, targetWidth, desiredHeight);
-                imgToDraw = cropCanvas;
-            }
-            ctxFinal.drawImage(imgToDraw, 0, currentY, targetWidth, desiredHeight);
-            currentY += desiredHeight;
-            // рисовать разделитель, если не последний
-            if (i < scaledItems.length - 1) {
-                ctxFinal.fillStyle = '#000000';
-                ctxFinal.fillRect(0, currentY, targetWidth, gapSize);
-                currentY += gapSize;
-            }
-        }
-
-        // Если после всего осталось место снизу (текущийY < targetHeight), оно уже черное благодаря начальной заливке.
-        // Применяем цветовой фильтр к финальному изображению
-        applyFilterToCanvas(finalCanvas, filter);
-
-        // Отображаем результат на экранном canvas
-        resultCanvas.width = targetWidth;
-        resultCanvas.height = targetHeight;
-        const displayCtx = resultCanvas.getContext('2d');
-        displayCtx.drawImage(finalCanvas, 0, 0);
-        resultArea.style.display = 'block';
-        resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-        // Сохраняем для скачивания
-        window.lastFinalCanvas = finalCanvas;
-    }
-
-    // Скачивание
-    function downloadImage() {
-        if (!window.lastFinalCanvas) {
-            alert("Сначала создайте обои кнопкой «Собрать обои»");
+        resultArea.style.display = 'none';
+        const loaded = [];
+        for (let i=0;i<cropperInstances.length;i++) if (cropperInstances[i]) loaded.push(i);
+        if (loaded.length === 0) {
+            errorMsgDiv.innerHTML = `<div class="error-message">${translations[currentLang].errorNoPhotos}</div>`;
+            resultArea.style.display = 'block';
             return;
         }
-        const formatOption = formatSelect.options[formatSelect.selectedIndex]?.text.split(' ')[0] || 'wallpaper';
-        const canvas = window.lastFinalCanvas;
-        canvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `freize_eyes_${formatOption}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        const [targetW, targetH] = formatSelect.value.split(',').map(Number);
+        const gap = parseInt(gapSelect.value);
+        const filter = filterSelect.value;
+        if (lastFillPercent < 70 || lastFillPercent > 98) {
+            const t = translations[currentLang];
+            const warn = lastFillPercent < 70 ? t.fillLow : t.fillHigh;
+            if (!confirm(`${warn}\n${t.infoNote}\nПродолжить?`)) return;
+        }
+        const cropped = [];
+        for (let idx of loaded) {
+            const c = getCroppedCanvasSafe(idx);
+            if (!c) { errorMsgDiv.innerHTML = `<div class="error-message">${translations[currentLang].errorCropFailed}</div>`; resultArea.style.display = 'block'; return; }
+            cropped.push(c);
+        }
+        const scaled = [];
+        for (let i=0;i<cropped.length;i++) {
+            const src = cropped[i];
+            const scale = targetW / src.width;
+            const newH = Math.floor(src.height * scale);
+            const tmp = document.createElement('canvas');
+            tmp.width = targetW; tmp.height = newH;
+            tmp.getContext('2d').drawImage(src, 0, 0, src.width, src.height, 0, 0, targetW, newH);
+            scaled.push({ canvas: tmp, origH: newH, finalH: newH });
+        }
+        let gapsTotal = (loaded.length-1)*gap;
+        let totalH = scaled.reduce((s,it)=>s+it.origH,0)+gapsTotal;
+        if (totalH > targetH) {
+            let overflow = totalH - targetH;
+            for (let i=0;i<scaled.length;i++) {
+                let maxR = scaled[i].origH - 10;
+                let r = Math.min(maxR, Math.ceil(overflow/(scaled.length-i)));
+                if(r<0) r=0;
+                scaled[i].finalH = scaled[i].origH - r;
+                overflow -= r;
+                if(overflow<=0) break;
+            }
+            if(overflow>0 && scaled.length) scaled[scaled.length-1].finalH = Math.max(8, scaled[scaled.length-1].finalH - overflow);
+        }
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = targetW; finalCanvas.height = targetH;
+        const ctx = finalCanvas.getContext('2d');
+        ctx.fillStyle='#000'; ctx.fillRect(0,0,targetW,targetH);
+        let y=0;
+        for(let i=0;i<scaled.length;i++){
+            const it = scaled[i];
+            let drawH = it.finalH;
+            let drawImg = it.canvas;
+            if(drawH !== it.origH){
+                const cropCanvas = document.createElement('canvas');
+                cropCanvas.width = targetW; cropCanvas.height = drawH;
+                cropCanvas.getContext('2d').drawImage(it.canvas, 0, 0, targetW, drawH, 0, 0, targetW, drawH);
+                drawImg = cropCanvas;
+            }
+            ctx.drawImage(drawImg, 0, y, targetW, drawH);
+            y+=drawH;
+            if(i<scaled.length-1){ ctx.fillStyle='#000'; ctx.fillRect(0,y,targetW,gap); y+=gap; }
+        }
+        applyFilter(finalCanvas, filter);
+        resultCanvas.width=targetW; resultCanvas.height=targetH;
+        resultCanvas.getContext('2d').drawImage(finalCanvas,0,0);
+        resultArea.style.display='block';
+        window.lastFinalCanvas = finalCanvas;
+        resultArea.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function downloadAs(fmt) {
+        if(!window.lastFinalCanvas){ alert(translations[currentLang].errorNoPhotos); return; }
+        const mime = fmt==='jpeg'?'image/jpeg':'image/png';
+        const ext= fmt==='jpeg'?'jpg':'png';
+        const qual = fmt==='jpeg'?0.92:undefined;
+        window.lastFinalCanvas.toBlob(blob=>{
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement('a');
+            a.href=url; a.download=`freize_eyes_${Date.now()}.${ext}`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        },mime,qual);
+    }
+
+    // ---------- Динамическое добавление карточек ----------
+    function destroyCropper(idx) {
+        if (cropperInstances[idx]) {
+            try { cropperInstances[idx].destroy(); } catch(e) {}
+            cropperInstances[idx] = null;
+        }
+    }
+
+    function appendNewCard() {
+        const newIdx = cropperInstances.length;
+        cropperInstances.push(null);
+        imgElements.push(null);
+        placeholderDivs.push(null);
+        slotsData.push({});
+
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.dataset.index = newIdx;
+        const t = translations[currentLang];
+        const delHtml = (cropperInstances.length > 1) ? `<button class="small-btn delete-btn" data-delete="${newIdx}">${t.delete}</button>` : '';
+        card.innerHTML = `
+            <div class="card-header">
+                <h3>${t.photoLabel} ${newIdx+1}</h3>
+                <div class="btn-group">
+                    <button class="small-btn reset-img-btn" data-reset="${newIdx}">${t.reset}</button>
+                    ${delHtml}
+                </div>
+            </div>
+            <input type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-idx="${newIdx}">
+            <div class="preview-area">
+                <div class="crop-placeholder" style="color:#5a5a5a; padding:20px;">${t.choosePhoto}</div>
+            </div>
+        `;
+        const addBtn = document.querySelector('.add-card-btn');
+        if (addBtn) photosContainer.insertBefore(card, addBtn);
+        else photosContainer.appendChild(card);
+
+        const previewDiv = card.querySelector('.preview-area');
+        const placeholderDiv = previewDiv.querySelector('.crop-placeholder');
+        placeholderDivs[newIdx] = placeholderDiv;
+        const img = document.createElement('img');
+        img.style.maxWidth = '100%';
+        img.style.display = 'none';
+        previewDiv.appendChild(img);
+        imgElements[newIdx] = img;
+
+        const fileInput = card.querySelector('.file-input');
+        fileInput.addEventListener('change', (e) => {
+            const idx = parseInt(e.target.getAttribute('data-idx'));
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const url = ev.target.result;
+                slotsData[idx] = { dataUrl: url };
+                const imgEl = imgElements[idx];
+                imgEl.src = url;
+                imgEl.style.display = 'block';
+                if (placeholderDivs[idx]) placeholderDivs[idx].style.display = 'none';
+                imgEl.onload = () => {
+                    if (cropperInstances[idx]) destroyCropper(idx);
+                    cropperInstances[idx] = new Cropper(imgEl, {
+                        viewMode: 1,
+                        dragMode: 'move',
+                        aspectRatio: NaN,
+                        autoCropArea: 1,
+                        responsive: true,
+                        restore: false,
+                        guides: true,
+                        center: true,
+                        highlight: true,
+                        background: false,
+                        rotatable: false,
+                        scalable: true,
+                        zoomable: true,
+                        movable: true,
+                        zoomOnTouch: true,
+                        zoomOnWheel: true,
+                        minCropBoxWidth: 60,
+                        minCropBoxHeight: 60
+                    });
+                    cropperInstances[idx].on('cropend', () => updateFillRecommendation());
+                    updateGenerateButtonState();
+                    updateFillRecommendation();
+                    maybeShowAddButton();
+                };
+            };
+            reader.readAsDataURL(file);
         });
+
+        const resetBtn = card.querySelector('.reset-img-btn');
+        resetBtn.addEventListener('click', () => resetSlot(parseInt(resetBtn.getAttribute('data-reset'))));
+        resetBtn.setAttribute('data-reset', newIdx);
+
+        if (cropperInstances.length > 1) {
+            const delBtn = card.querySelector('.delete-btn');
+            delBtn.addEventListener('click', () => deleteSlot(parseInt(delBtn.getAttribute('data-delete'))));
+            delBtn.setAttribute('data-delete', newIdx);
+        }
+        const addBtnAfter = document.querySelector('.add-card-btn');
+        if (addBtnAfter) photosContainer.appendChild(addBtnAfter);
+        updateGenerateButtonState();
+        updateFillRecommendation();
+        maybeShowAddButton();
     }
 
-    // Обработчик изменения количества фото
-    function onPhotoCountChange() {
-        const newCount = parseInt(photoCountSelect.value);
-        if (newCount === activePhotoCount) return;
-        activePhotoCount = newCount;
-        rebuildPhotoCards(activePhotoCount);
-        // Скрываем результат
+    function resetSlot(idx) {
+        if (cropperInstances[idx]) {
+            cropperInstances[idx].destroy();
+            cropperInstances[idx] = null;
+        }
+        const imgEl = imgElements[idx];
+        imgEl.src = '';
+        imgEl.style.display = 'none';
+        if (placeholderDivs[idx]) {
+            placeholderDivs[idx].style.display = 'flex';
+            placeholderDivs[idx].innerHTML = translations[currentLang].choosePhoto;
+        }
+        const inp = document.querySelector(`.file-input[data-idx="${idx}"]`);
+        if (inp) inp.value = '';
+        if (slotsData[idx]) delete slotsData[idx].dataUrl;
+        updateGenerateButtonState();
         resultArea.style.display = 'none';
         window.lastFinalCanvas = null;
-        errorMsgDiv.innerHTML = '';
+        updateFillRecommendation();
+        maybeShowAddButton();
     }
 
-    // При изменении формата или фильтра скрываем результат (чтобы повторно генерировать)
-    function onSettingsChange() {
+    function deleteSlot(idx) {
+        if (cropperInstances.length <= 1) return;
+        destroyCropper(idx);
+        const card = document.querySelector(`.photo-card[data-index="${idx}"]`);
+        if (card) card.remove();
+        cropperInstances.splice(idx, 1);
+        imgElements.splice(idx, 1);
+        placeholderDivs.splice(idx, 1);
+        slotsData.splice(idx, 1);
+        document.querySelectorAll('.photo-card').forEach((card, newIdx) => {
+            card.dataset.index = newIdx;
+            const header = card.querySelector('.card-header h3');
+            if (header) header.innerHTML = `${translations[currentLang].photoLabel} ${newIdx+1}`;
+            const resetBtn = card.querySelector('.reset-img-btn');
+            if (resetBtn) resetBtn.setAttribute('data-reset', newIdx);
+            const delBtn = card.querySelector('.delete-btn');
+            if (delBtn) delBtn.setAttribute('data-delete', newIdx);
+            const fileInput = card.querySelector('.file-input');
+            if (fileInput) fileInput.setAttribute('data-idx', newIdx);
+        });
+        updateGenerateButtonState();
         resultArea.style.display = 'none';
         window.lastFinalCanvas = null;
+        updateFillRecommendation();
+        maybeShowAddButton();
     }
 
-    // Инициализация при загрузке
+    function maybeShowAddButton() {
+        let existing = document.querySelector('.add-card-btn');
+        if (existing) existing.remove();
+        if (cropperInstances.length < maxSlots) {
+            const addBtn = document.createElement('div');
+            addBtn.className = 'add-card-btn';
+            addBtn.innerHTML = translations[currentLang].addPhoto;
+            addBtn.addEventListener('click', () => appendNewCard());
+            photosContainer.appendChild(addBtn);
+        }
+    }
+
+    function updateGenerateButtonState() {
+        const anyLoaded = cropperInstances.some(c => c !== null);
+        generateBtn.disabled = !anyLoaded;
+        generateBtnBottom.disabled = !anyLoaded;
+        const title = anyLoaded ? "" : translations[currentLang].generateBtnDisabledTitle;
+        generateBtn.title = title;
+        generateBtnBottom.title = title;
+    }
+
+    function applyLanguage() {
+        const t = translations[currentLang];
+        document.getElementById('subtitle').innerHTML = t.subtitle;
+        document.getElementById('labelFormat').innerHTML = t.labelFormat;
+        document.getElementById('labelFilter').innerHTML = t.labelFilter;
+        document.getElementById('labelGap').innerHTML = t.labelGap;
+        const btnText = t.generateBtn;
+        generateBtn.innerHTML = btnText;
+        generateBtnBottom.innerHTML = btnText;
+        document.getElementById('resultTitle').innerHTML = t.resultTitle;
+        document.getElementById('infoNote').innerHTML = t.infoNote;
+        document.getElementById('footerText').innerHTML = t.footer;
+        downloadPngBtn.innerHTML = t.downloadPng;
+        downloadJpegBtn.innerHTML = t.downloadJpeg;
+        document.getElementById('tip1').innerHTML = t.tips[0];
+        document.getElementById('tip2').innerHTML = t.tips[1];
+        document.getElementById('tip3').innerHTML = t.tips[2];
+        document.getElementById('tip4').innerHTML = t.tips[3];
+        document.getElementById('fillLabel').innerHTML = t.fillLabel;
+        const filterMap = { none: "Оригинал", bw: "Ч/Б", sepia: "Сепия", vintage: "Винтаж", cool: "Холодный" };
+        if (currentLang === 'en') Object.assign(filterMap, { none: "Original", bw: "B&W", sepia: "Sepia", vintage: "Vintage", cool: "Cool" });
+        if (currentLang === 'zh') Object.assign(filterMap, { none: "原始", bw: "黑白", sepia: "深褐色", vintage: "复古", cool: "冷色" });
+        for (let i = 0; i < filterSelect.options.length; i++) {
+            const val = filterSelect.options[i].value;
+            if (filterMap[val]) filterSelect.options[i].text = filterMap[val];
+        }
+        const gapMap = { "6": currentLang === 'ru' ? "Тонкая 6px" : (currentLang === 'en' ? "Thin 6px" : "细 6px"), "10": currentLang === 'ru' ? "Средняя 10px" : (currentLang === 'en' ? "Medium 10px" : "中 10px"), "16": currentLang === 'ru' ? "Широкая 16px" : (currentLang === 'en' ? "Wide 16px" : "宽 16px") };
+        for (let i = 0; i < gapSelect.options.length; i++) {
+            const val = gapSelect.options[i].value;
+            gapSelect.options[i].text = gapMap[val];
+        }
+        document.querySelectorAll('.photo-card').forEach(card => {
+            const idx = parseInt(card.dataset.index);
+            const header = card.querySelector('.card-header h3');
+            if (header) header.innerHTML = `${t.photoLabel} ${idx+1}`;
+            const resetBtn = card.querySelector('.reset-img-btn');
+            if (resetBtn) resetBtn.innerHTML = t.reset;
+            const delBtn = card.querySelector('.delete-btn');
+            if (delBtn) delBtn.innerHTML = t.delete;
+            const placeholder = card.querySelector('.crop-placeholder');
+            if (placeholder && (placeholder.innerText.includes('Выберите') || placeholder.innerText.includes('Choose') || placeholder.innerText.includes('选择'))) {
+                placeholder.innerHTML = t.choosePhoto;
+            }
+        });
+        const addBtn = document.querySelector('.add-card-btn');
+        if (addBtn) addBtn.innerHTML = t.addPhoto;
+        updateGenerateButtonState();
+        updateFillRecommendation();
+    }
+
     function init() {
-        activePhotoCount = 4;
-        photoCountSelect.value = '4';
-        rebuildPhotoCards(4);
+        populateResolutionSelect();
+        langSelect.value = 'ru';
+        currentLang = 'ru';
+        langSelect.addEventListener('change', (e) => { currentLang = e.target.value; applyLanguage(); });
+        cropperInstances = []; imgElements = []; placeholderDivs = []; slotsData = [];
+        appendNewCard(); // первый слот
+        updateGenerateButtonState();
         generateBtn.addEventListener('click', generateWallpaper);
-        downloadBtn.addEventListener('click', downloadImage);
-        photoCountSelect.addEventListener('change', onPhotoCountChange);
-        formatSelect.addEventListener('change', onSettingsChange);
-        filterSelect.addEventListener('change', onSettingsChange);
-        gapSelect.addEventListener('change', onSettingsChange);
+        generateBtnBottom.addEventListener('click', generateWallpaper);
+        syncHeightBtn.addEventListener('click', syncCropHeights);
+        downloadPngBtn.addEventListener('click', () => downloadAs('png'));
+        downloadJpegBtn.addEventListener('click', () => downloadAs('jpeg'));
+        formatSelect.addEventListener('change', () => { resultArea.style.display = 'none'; window.lastFinalCanvas=null; updateFillRecommendation(); });
+        filterSelect.addEventListener('change', () => { resultArea.style.display = 'none'; window.lastFinalCanvas=null; });
+        gapSelect.addEventListener('change', () => { resultArea.style.display = 'none'; window.lastFinalCanvas=null; updateFillRecommendation(); });
+        scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        applyLanguage();
     }
-
     init();
 </script>
 </body>
