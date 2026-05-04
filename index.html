@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Freize Eyes — обои из нескольких фото</title>
+    <!-- Cropper.js -->
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #0a0a0a;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            margin: 0;
+            padding: 16px 12px 40px;
+            color: #f0f0f0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e0e0, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+        .toolbar {
+            background: #121212;
+            border-radius: 32px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: space-between;
+            align-items: flex-end;
+            backdrop-filter: blur(4px);
+            border: 1px solid #2a2a2a;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 130px;
+        }
+        .control-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9ca3af;
+        }
+        select, button {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            padding: 10px 14px;
+            border-radius: 60px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        select:active, button:active {
+            transform: scale(0.97);
+        }
+        button.primary {
+            background: #2563eb;
+            border: none;
+            box-shadow: 0 2px 12px rgba(37,99,235,0.3);
+        }
+        button.primary:hover {
+            background: #3b82f6;
+        }
+        button.outline {
+            background: transparent;
+            border-color: #3a3a3a;
+        }
+        .photos-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .photo-card {
+            background: #111;
+            border-radius: 28px;
+            padding: 14px;
+            border: 1px solid #262626;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 6px;
+        }
+        .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            background: #1f1f1f;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .reset-img-btn {
+            background: #2c2c2c;
+            border: none;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            border-radius: 40px;
+            color: #f87171;
+        }
+        .file-input {
+            width: 100%;
+            background: #1e1e1e;
+            border: 1px dashed #3a3a3a;
+            border-radius: 60px;
+            padding: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            color: #ccc;
+        }
+        .preview-area {
+            background: #080808;
+            border-radius: 24px;
+            min-height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            background-image: radial-gradient(circle at 30% 40%, #2a2a2a 1px, transparent 1px);
+            background-size: 14px 14px;
+        }
+        .preview-img {
+            max-width: 100%;
+            display: block;
+            visibility: visible;
+        }
+        .crop-info {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 8px;
+            color: #6b7280;
+        }
+        .result-area {
+            background: #000000;
+            border-radius: 36px;
+            padding: 20px;
+            margin-top: 10px;
+            text-align: center;
+            border: 1px solid #2c2c2c;
+        }
+        .result-canvas {
+            max-width: 100%;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+            background: black;
+        }
+        .download-btn {
+            background: #10b981;
+            margin-top: 20px;
+            padding: 12px 28px;
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+        }
+        .error-message {
+            background: #2d0b0b;
+            color: #ff9e9e;
+            border-radius: 60px;
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            margin-top: 16px;
+        }
+        .footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #4a4a4a;
+            margin-top: 28px;
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        @media (max-width: 550px) {
+            body {
+                padding: 12px 10px;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-group {
+                width: 100%;
+            }
+            .photo-card {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FREIZE EYES</h1>
+        <p>2-6 фото → вертикальные обои<br>с кадрированием, фильтрами и чёрными разделителями</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="control-group">
+            <label>📸 Количество фото</label>
+            <select id="photoCountSelect">
+                <option value="2">2 фото</option>
+                <option value="3">3 фото</option>
+                <option value="4" selected>4 фото</option>
+                <option value="5">5 фото</option>
+                <option value="6">6 фото</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>📱 Формат обоев</label>
+            <select id="formatSelect">
+                <option value="1080,1920">Full HD (1080x1920)</option>
+                <option value="1170,2532">iPhone 13/14/15</option>
+                <option value="1242,2688">iPhone Pro Max</option>
+                <option value="1440,2560">Samsung/Pixel 1440p</option>
+                <option value="1080,2400">20:9 Android</option>
+                <option value="750,1334">iPhone SE/8</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>🎨 Фильтр</label>
+            <select id="filterSelect">
+                <option value="none">Оригинал</option>
+                <option value="bw">Ч/Б</option>
+                <option value="sepia">Сепия</option>
+                <option value="vintage">Винтаж</option>
+                <option value="cool">Холодный</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>⚫ Полоска (px)</label>
+            <select id="gapSelect">
+                <option value="6">Тонкая 6px</option>
+                <option value="10" selected>Средняя 10px</option>
+                <option value="16">Широкая 16px</option>
+            </select>
+        </div>
+        <button id="generateBtn" class="primary">✨ Собрать обои ✨</button>
+    </div>
+
+    <div id="photosContainer" class="photos-grid"></div>
+
+    <div id="resultArea" class="result-area" style="display: none;">
+        <h3 style="margin: 0 0 12px 0;">🎯 Ваши обои</h3>
+        <canvas id="resultCanvas" class="result-canvas"></canvas>
+        <button id="downloadBtn" class="download-btn">⬇ Скачать PNG ⬇</button>
+        <div id="errorMessage"></div>
+    </div>
+    <div class="footer">
+        🔥 Совет: загрузите фото → откадрируйте нужную область (жест/мышь) → выберите формат и фильтр.<br>
+        📏 Если сумма фото выше формата — фото аккуратно обрежутся снизу. Если ниже — чёрное поле внизу.
+    </div>
+</div>
+
+<script>
+    // ---------- Глобальные переменные ----------
+    let currentCroppers = [];     // массив экземпляров Cropper
+    let currentImgElements = [];  // img элементы для каждого слота
+    let currentPlaceholders = [];  // для хранения div-плейсхолдеров если нужно
+    let activePhotoCount = 4;
+
+    // DOM элементы
+    const photosContainer = document.getElementById('photosContainer');
+    const photoCountSelect = document.getElementById('photoCountSelect');
+    const formatSelect = document.getElementById('formatSelect');
+    const filterSelect = document.getElementById('filterSelect');
+    const gapSelect = document.getElementById('gapSelect');
+    const generateBtn = document.getElementById('generateBtn');
+    const resultArea = document.getElementById('resultArea');
+    const resultCanvas = document.getElementById('resultCanvas');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const errorMsgDiv = document.getElementById('errorMessage');
+
+    // ---------- вспомогательные функции ----------
+    function destroyAllCroppers() {
+        for (let i = 0; i < currentCroppers.length; i++) {
+            if (currentCroppers[i]) {
+                try {
+                    currentCroppers[i].destroy();
+                } catch(e) {}
+                currentCroppers[i] = null;
+            }
+        }
+        currentCroppers = [];
+        currentImgElements = [];
+        currentPlaceholders = [];
+    }
+
+    // Перестроить карточки в соответствии с выбранным количеством фото
+    function rebuildPhotoCards(count) {
+        destroyAllCroppers();
+        photosContainer.innerHTML = '';
+        currentCroppers = new Array(count).fill(null);
+        currentImgElements = new Array(count).fill(null);
+        currentPlaceholders = new Array(count).fill(null);
+
+        for (let i = 0; i < count; i++) {
+            const card = document.createElement('div');
+            card.className = 'photo-card';
+            card.dataset.index = i;
+            card.innerHTML = `
+                <div class="card-header">
+                    <h3>📷 Фото ${i+1}</h3>
+                    <button class="reset-img-btn" data-reset="${i}">Сброс</button>
+                </div>
+                <input type="file" accept="image/jpeg,image/png,image/webp" class="file-input" data-idx="${i}">
+                <div class="preview-area" id="previewArea${i}">
+                    <div class="crop-placeholder" style="color:#5a5a5a; padding:20px;">🖼️ Выберите изображение</div>
+                </div>
+                <div class="crop-info">👉 Нажми на фото → кадрируй движением/зумом</div>
+            `;
+            photosContainer.appendChild(card);
+
+            const previewDiv = card.querySelector(`.preview-area`);
+            const placeholderDiv = previewDiv.querySelector('.crop-placeholder');
+            currentPlaceholders[i] = placeholderDiv;
+
+            // Создаем img элемент, который будем использовать для Cropper
+            const img = document.createElement('img');
+            img.style.maxWidth = '100%';
+            img.style.display = 'none';  // скрыт пока нет фото
+            img.alt = `preview ${i+1}`;
+            previewDiv.appendChild(img);
+            currentImgElements[i] = img;
+
+            // Обработчик загрузки файла
+            const fileInput = card.querySelector(`.file-input`);
+            fileInput.addEventListener('change', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const url = ev.target.result;
+                    // Уничтожаем старый cropper если есть
+                    if (currentCroppers[idx]) {
+                        currentCroppers[idx].destroy();
+                        currentCroppers[idx] = null;
+                    }
+                    const imgElement = currentImgElements[idx];
+                    imgElement.src = url;
+                    imgElement.style.display = 'block';
+                    // скрываем плейсхолдер
+                    if (currentPlaceholders[idx]) {
+                        currentPlaceholders[idx].style.display = 'none';
+                    }
+                    imgElement.onload = () => {
+                        // Инициализируем Cropper с поддержкой тач-событий
+                        currentCroppers[idx] = new Cropper(imgElement, {
+                            viewMode: 2,
+                            dragMode: 'move',
+                            aspectRatio: NaN,
+                            autoCropArea: 1,
+                            responsive: true,
+                            restore: false,
+                            guides: true,
+                            center: true,
+                            highlight: true,
+                            background: false,
+                            rotatable: false,
+                            scalable: true,
+                            zoomable: true,
+                            movable: true,
+                            toggleDragModeOnDblclick: false,
+                            zoomOnTouch: true,
+                            zoomOnWheel: true
+                        });
+                    };
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Кнопка сброса фото
+            const resetBtn = card.querySelector(`.reset-img-btn`);
+            resetBtn.addEventListener('click', (e) => {
+                const idx = parseInt(resetBtn.getAttribute('data-reset'));
+                if (currentCroppers[idx]) {
+                    currentCroppers[idx].destroy();
+                    currentCroppers[idx] = null;
+                }
+                const imgEl = currentImgElements[idx];
+                imgEl.src = '';
+                imgEl.style.display = 'none';
+                if (currentPlaceholders[idx]) {
+                    currentPlaceholders[idx].style.display = 'flex';
+                }
+                // сбросить выбранный файл в input
+                const inp = document.querySelector(`.file-input[data-idx="${idx}"]`);
+                if (inp) inp.value = '';
+            });
+            resetBtn.setAttribute('data-reset', i);
+        }
+    }
+
+    // Функция получения кадрированного canvas из cropper (с учётом, что cropper может быть не инициализирован)
+    function getCroppedCanvasSafe(index) {
+        const cropper = currentCroppers[index];
+        if (!cropper) return null;
+        try {
+            return cropper.getCroppedCanvas();
+        } catch(e) {
+            console.warn(`cropper error index ${index}`, e);
+            return null;
+        }
+    }
+
+    // Применить цветовой фильтр к canvas (на месте)
+    function applyFilterToCanvas(canvas, filterType) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        switch(filterType) {
+            case 'bw':
+                for (let i = 0; i < data.length; i += 4) {
+                    const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                    data[i] = data[i+1] = data[i+2] = gray;
+                }
+                break;
+            case 'sepia':
+                for (let i = 0; i < data.length; i += 4) {
+                    let r = data[i], g = data[i+1], b = data[i+2];
+                    data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                    data[i+1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                    data[i+2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+                }
+                break;
+            case 'vintage':
+                for (let i = 0; i < data.length; i += 4) {
+                    let r = data[i], g = data[i+1], b = data[i+2];
+                    data[i] = Math.min(255, r * 1.05);
+                    data[i+1] = Math.min(255, g * 0.92);
+                    data[i+2] = Math.min(255, b * 0.82);
+                    // легкий теплый налет
+                    let nr = data[i] * 0.9 + data[i+1] * 0.5;
+                    let ng = data[i] * 0.5 + data[i+1] * 0.8;
+                    data[i] = Math.min(255, nr);
+                    data[i+1] = Math.min(255, ng);
+                }
+                break;
+            case 'cool':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] * 0.85);
+                    data[i+1] = Math.min(255, data[i+1] * 0.92);
+                    data[i+2] = Math.min(255, data[i+2] * 1.12);
+                }
+                break;
+            default: break;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        return canvas;
+    }
+
+    // Основная генерация
+    async function generateWallpaper() {
+        // очистка ошибок
+        errorMsgDiv.innerHTML = '';
+        const count = activePhotoCount;
+        // проверяем, что все фото загружены и cropper присутствует
+        for (let i = 0; i < count; i++) {
+            if (!currentCroppers[i]) {
+                errorMsgDiv.innerHTML = `<div class="error-message">❌ Фото ${i+1} не загружено или не откадрировано. Пожалуйста, загрузите все изображения и дождитесь кадрирования.</div>`;
+                resultArea.style.display = 'block';
+                return;
+            }
+        }
+
+        // получить настройки
+        const formatStr = formatSelect.value;
+        const [targetWidth, targetHeight] = formatStr.split(',').map(Number);
+        const gapSize = parseInt(gapSelect.value);
+        const filter = filterSelect.value;
+
+        // 1) Получаем кадрированные canvas каждого фото (оригинальные размеры после обрезки)
+        const croppedCanvases = [];
+        for (let i = 0; i < count; i++) {
+            const cropped = getCroppedCanvasSafe(i);
+            if (!cropped) {
+                errorMsgDiv.innerHTML = `<div class="error-message">⚠️ Ошибка получения кадрированного изображения для фото ${i+1}. Попробуйте перезагрузить фото.</div>`;
+                resultArea.style.display = 'block';
+                return;
+            }
+            croppedCanvases.push(cropped);
+        }
+
+        // 2) Масштабируем каждое фото под целевую ширину (без сжатия по вертикали пока, просто resize)
+        const scaledItems = []; // { canvas: HTMLCanvasElement, originalHeight: number, scaledHeight: number }
+        for (let i = 0; i < croppedCanvases.length; i++) {
+            const src = croppedCanvases[i];
+            const srcW = src.width;
+            const srcH = src.height;
+            if (srcW === 0 || srcH === 0) throw new Error('invalid size');
+            const scaleX = targetWidth / srcW;
+            const newHeight = Math.floor(srcH * scaleX);
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = targetWidth;
+            tempCanvas.height = newHeight;
+            const ctx = tempCanvas.getContext('2d');
+            ctx.drawImage(src, 0, 0, srcW, srcH, 0, 0, targetWidth, newHeight);
+            scaledItems.push({
+                canvas: tempCanvas,
+                originalScaledHeight: newHeight,
+                finalHeight: newHeight
+            });
+        }
+
+        // Суммарная высота фото и разделителей
+        const totalGaps = (count - 1) * gapSize;
+        let totalPhotoHeight = scaledItems.reduce((sum, item) => sum + item.originalScaledHeight, 0);
+        let totalHeightWithGaps = totalPhotoHeight + totalGaps;
+
+        // АДАПТАЦИЯ: если суммарная высота больше целевой -> применяем авто-кадрирование снизу равномерно по каждому фото
+        if (totalHeightWithGaps > targetHeight) {
+            const overflow = totalHeightWithGaps - targetHeight; // сколько лишних пикселей по высоте
+            // равномерно убираем высоту из каждого фото, обрезая снизу
+            let remainingOverflow = overflow;
+            // делаем копию finalHeight и будем изменять
+            for (let i = 0; i < scaledItems.length; i++) {
+                let item = scaledItems[i];
+                let maxReduce = item.originalScaledHeight - 4; // минимум оставить 4px
+                let reduce = Math.min(maxReduce, Math.ceil(remainingOverflow / (scaledItems.length - i)));
+                if (reduce < 0) reduce = 0;
+                item.finalHeight = item.originalScaledHeight - reduce;
+                remainingOverflow -= reduce;
+                if (remainingOverflow <= 0) break;
+            }
+            // если остался перебор (из-за округлений) – обрежем последнее чуть больше
+            let newTotal = scaledItems.reduce((s, it) => s + it.finalHeight, 0) + totalGaps;
+            if (newTotal > targetHeight) {
+                let lastIndex = scaledItems.length - 1;
+                let diff = newTotal - targetHeight;
+                scaledItems[lastIndex].finalHeight = Math.max(2, scaledItems[lastIndex].finalHeight - diff);
+            }
+            // пересчитаем общую высоту после обрезки
+            totalPhotoHeight = scaledItems.reduce((s, it) => s + it.finalHeight, 0);
+            totalHeightWithGaps = totalPhotoHeight + totalGaps;
+        }
+
+        // Создаем финальный canvas
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = targetWidth;
+        finalCanvas.height = targetHeight;
+        const ctxFinal = finalCanvas.getContext('2d');
+        // Заливаем черным фоном
+        ctxFinal.fillStyle = '#000000';
+        ctxFinal.fillRect(0, 0, targetWidth, targetHeight);
+
+        let currentY = 0;
+        for (let i = 0; i < scaledItems.length; i++) {
+            const item = scaledItems[i];
+            const desiredHeight = item.finalHeight;
+            let imgToDraw = item.canvas;
+            // Если нужная высота отличается от исходной (после автообрезания) — обрезаем canvas снизу
+            if (desiredHeight !== item.originalScaledHeight) {
+                const cropCanvas = document.createElement('canvas');
+                cropCanvas.width = targetWidth;
+                cropCanvas.height = desiredHeight;
+                const cropCtx = cropCanvas.getContext('2d');
+                // рисуем верхнюю часть исходного canvas, обрезая снизу
+                cropCtx.drawImage(item.canvas, 0, 0, targetWidth, desiredHeight, 0, 0, targetWidth, desiredHeight);
+                imgToDraw = cropCanvas;
+            }
+            ctxFinal.drawImage(imgToDraw, 0, currentY, targetWidth, desiredHeight);
+            currentY += desiredHeight;
+            // рисовать разделитель, если не последний
+            if (i < scaledItems.length - 1) {
+                ctxFinal.fillStyle = '#000000';
+                ctxFinal.fillRect(0, currentY, targetWidth, gapSize);
+                currentY += gapSize;
+            }
+        }
+
+        // Если после всего осталось место снизу (текущийY < targetHeight), оно уже черное благодаря начальной заливке.
+        // Применяем цветовой фильтр к финальному изображению
+        applyFilterToCanvas(finalCanvas, filter);
+
+        // Отображаем результат на экранном canvas
+        resultCanvas.width = targetWidth;
+        resultCanvas.height = targetHeight;
+        const displayCtx = resultCanvas.getContext('2d');
+        displayCtx.drawImage(finalCanvas, 0, 0);
+        resultArea.style.display = 'block';
+        resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Сохраняем для скачивания
+        window.lastFinalCanvas = finalCanvas;
+    }
+
+    // Скачивание
+    function downloadImage() {
+        if (!window.lastFinalCanvas) {
+            alert("Сначала создайте обои кнопкой «Собрать обои»");
+            return;
+        }
+        const formatOption = formatSelect.options[formatSelect.selectedIndex]?.text.split(' ')[0] || 'wallpaper';
+        const canvas = window.lastFinalCanvas;
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `freize_eyes_${formatOption}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    // Обработчик изменения количества фото
+    function onPhotoCountChange() {
+        const newCount = parseInt(photoCountSelect.value);
+        if (newCount === activePhotoCount) return;
+        activePhotoCount = newCount;
+        rebuildPhotoCards(activePhotoCount);
+        // Скрываем результат
+        resultArea.style.display = 'none';
+        window.lastFinalCanvas = null;
+        errorMsgDiv.innerHTML = '';
+    }
+
+    // При изменении формата или фильтра скрываем результат (чтобы повторно генерировать)
+    function onSettingsChange() {
+        resultArea.style.display = 'none';
+        window.lastFinalCanvas = null;
+    }
+
+    // Инициализация при загрузке
+    function init() {
+        activePhotoCount = 4;
+        photoCountSelect.value = '4';
+        rebuildPhotoCards(4);
+        generateBtn.addEventListener('click', generateWallpaper);
+        downloadBtn.addEventListener('click', downloadImage);
+        photoCountSelect.addEventListener('change', onPhotoCountChange);
+        formatSelect.addEventListener('change', onSettingsChange);
+        filterSelect.addEventListener('change', onSettingsChange);
+        gapSelect.addEventListener('change', onSettingsChange);
+    }
+
+    init();
+</script>
+</body>
+</html>
