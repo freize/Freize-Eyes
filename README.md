@@ -72,5 +72,4 @@ Height sync	Uniform blocks for a professional look.
 Multilingual	Accessible to a global audience.
 No backend	Private, fast, and free to host.
 
-🔗 Live Demo & Repository
-Live Demo: https://eyes.freize.net/index.html
+🔗 Live Demo: https://eyes.freize.net/index.html
