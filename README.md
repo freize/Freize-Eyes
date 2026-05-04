@@ -40,13 +40,10 @@ If the total height is less than the target, black padding is added at the botto
 🧩 Clean, Accessible UI
 Clearly grouped settings: screen resolution, colour filter, separator.
 Secondary row with two large action buttons (Sync Height + Generate).
-Hint section with step‑by‑step instructions (vertical layout, no duplicate emojis).
-Styled file input buttons that work on all browsers.
 
 ⚡ Performance & Privacy
 100% client‑side – no server uploads, your photos never leave your device.
-Uses Cropper.js for smooth cropping and TensorFlow.js is not required (no AI model downloads, works offline after first load).
-Lightweight, fast, and responsive.
+Uses Cropper.js for smooth cropping and TensorFlow.js.
 
 🚀 Ready for GitHub Pages
 Pure HTML/CSS/JS – no build step. Just clone and open index.html.
@@ -54,22 +51,5 @@ Easy to deploy on GitHub Pages, Netlify, or any static hosting.
 
 🎯 Use Cases
 Create personalised phone wallpapers from selfies, eye close‑ups, or any vertical photos.
-Perfect for social media challenges (“freize eyes” trend).
-Quickly combine product photos or portrait sequences.
-
-📸 Screenshots (add to your repo)
-Upload & crop each photo individually.
-Adjust settings – resolution, filter, separator.
-Check fill indicator – aim for 85‑95%.
-Generate & download as PNG or JPEG.
-
-💡 Why Choose Freize Eyes?
-Feature	Benefit
-Dynamic photo count	Add exactly as many photos as you need (up to 6).
-Auto‑detected resolution	No need to search for your phone’s specs.
-Fill recommendation	Avoids wasted space or awkward cropping.
-Height sync	Uniform blocks for a professional look.
-Multilingual	Accessible to a global audience.
-No backend	Private, fast, and free to host.
 
 🔗 Live Demo: https://eyes.freize.net/index.html
